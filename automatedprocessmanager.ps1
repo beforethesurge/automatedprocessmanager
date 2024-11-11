@@ -1,10 +1,11 @@
 while ($true) {
     $currentTime = Get-Date
     if ($currentTime.Hour -eq 19 -and $currentTime.Minute -eq 0) {
-        # Ends MSEdge, WSL and PWSH
+        # Ends MSEdge, PWSH and WSL
         Stop-Process -Name "msedge"
-        wsl.exe --shutdown
         Stop-Process -Name "pwsh"
+        wsl.exe --shutdown
+        
         Start-Sleep -Seconds 60
     } 
     elseif ($currentTime.Hour -eq 9 -and $currentTime.Minute -eq 0) {
