@@ -3,9 +3,9 @@ while ($true) {
     if ($currentTime.Hour -eq 19 -and $currentTime.Minute -eq 0) {
         # Ends MSEdge, PWSH and WSL
         Stop-Process -Name "msedge"
-        Stop-Process -Name "pwsh"
+        #Stop-Process -Name "pwsh" # Keeping this off for now until I find a better way to stop only the pwsh terminal window, not the integrated one in vscode
         wsl.exe --shutdown
-        
+
         Start-Sleep -Seconds 60
     } 
     elseif ($currentTime.Hour -eq 9 -and $currentTime.Minute -eq 0) {
