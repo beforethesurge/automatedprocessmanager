@@ -1,37 +1,27 @@
 while ($true) {
-    # Infinite loop to continuously check the time and perform actions
-    $currentTime = Get-Date  # Get the current date and time
+    $currentTime = Get-Date
     if ($currentTime.Hour -eq 19 -and $currentTime.Minute -eq 0) {
-        # Check if the current time is exactly 7:00 PM
-        Stop-Process -Name "msedge"  # Close Microsoft Edge (msedge) process
-        wsl.exe --shutdown  # Shut down Windows Subsystem for Linux (WSL)
-        Start-Sleep -Seconds 60  # Wait for 60 seconds before continuing the loop
-    } elseif ($currentTime.Hour -eq 9 -and $currentTime.Minute -eq 0) {
-        # Check if the current time is exactly 9:00 AM
-        $pwafolderPath = "P:\DOPE\PowerShell\edgereboot\shortcuts"  # Define the folder path where shortcuts are stored
-        if (Test-Path $folderPath) {
-            # Check if the folder exists
-            Get-ChildItem -Path $pwafolderPath -File -Filter "*.lnk" | ForEach-Object {
-                # Get all shortcut files (.lnk) in the folder and iterate over them
-                try {
-                    Start-Process -FilePath $_.FullName  # Attempt to start each shortcut (application)
-                }
-                catch {
-                    Write-Host "Error starting $($_.FullName): $_"  # Handle any errors starting the shortcut and display an error message
-                }
+        # Ends MSEdge and WSL
+        Stop-Process -Name "msedge"
+        wsl.exe --shutdown
+        Start-Sleep -Seconds 60
+    } 
+    elseif ($currentTime.Hour -eq 9 -and $currentTime.Minute -eq 0) {
+        # Check if shortcuts exist and start them
+        $pwafolderPath = "P:\DOPE\PowerShell\edgereboot\shortcuts" # Specify where PWA lnk files are
+        if (Test-Path $pwafolderPath) {
+            Get-ChildItem -Path $pwafolderPath -Filter "*.lnk" | ForEach-Object {
+                try { Start-Process $_.FullName }
+                catch { Write-Host "Error: $_" }
             }
-        } else {
-            Write-Host "Folder not found: $folderPath"  # Print a message if the folder does not exist
-        }
-        $wslfolderpath = "C:\Program Files\WindowsApps" # Dictates where Windows Apps are (defined as for WSL)
-        if (Test-Path $wslfolderpath) {
-            # Test to make sure PATH exists
-            $kalifilepath = Get-ChildItem -Path $wslfolderpath -Recurse -Filter "kali.exe" -ErrorAction SilentlyContinue # Find kali.exe recursively inside $wslfolderpath
-            & $kalifilepath # Execute file (should be kali.exe)
-        } else {
-            Write-Host "File not found: $kalifilepath"  # Print a message if the file does not exist
-        }
-        Start-Sleep -Seconds 60  # Wait for 60 seconds before continuing the loop
+        } else { Write-Host "Folder not found: $pwafolderPath" }
+
+        # Start Kali if it's available
+        $kalifilepath = Get-ChildItem "C:\Program Files\WindowsApps" -Recurse -Filter "kali.exe" -ErrorAction SilentlyContinue
+        if ($kalifilepath) { & $kalifilepath } 
+        else { Write-Host "Kali not found" }
+
+        Start-Sleep -Seconds 60
     }
-    Start-Sleep -Seconds 30  # Wait for 30 seconds before checking the time again
+    Start-Sleep -Seconds 30
 }
