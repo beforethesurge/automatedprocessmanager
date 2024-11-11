@@ -1,9 +1,10 @@
 while ($true) {
     $currentTime = Get-Date
     if ($currentTime.Hour -eq 19 -and $currentTime.Minute -eq 0) {
-        # Ends MSEdge and WSL
+        # Ends MSEdge, WSL and PWSH
         Stop-Process -Name "msedge"
         wsl.exe --shutdown
+        Stop-Process -Name "pwsh"
         Start-Sleep -Seconds 60
     } 
     elseif ($currentTime.Hour -eq 9 -and $currentTime.Minute -eq 0) {
@@ -20,6 +21,11 @@ while ($true) {
         $kalifilepath = Get-ChildItem "C:\Program Files\WindowsApps" -Recurse -Filter "kali.exe" -ErrorAction SilentlyContinue
         if ($kalifilepath) { & $kalifilepath } 
         else { Write-Host "Kali not found" }
+
+        # Start PowerShell Terminal
+        $pwshfilepath = "C:\Program Files (x86)\PowerShell\7\pwsh.exe"
+        if ($pwshfilepath) { & $pwshfilepath}
+        else { Write-Host "PWSH not found" }
 
         Start-Sleep -Seconds 60
     }
