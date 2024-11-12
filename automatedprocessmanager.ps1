@@ -10,7 +10,7 @@ while ($true) {
     } 
     elseif ($currentTime.Hour -eq 9 -and $currentTime.Minute -eq 0) {
         # Check if shortcuts exist and start them
-        $pwafolderPath = "P:\DOPE\PowerShell\edgereboot\shortcuts" # Specify where PWA lnk files are
+        $pwafolderPath = "P:\DOPE\PowerShell\automatedprocessmanager\shortcuts" # Specify where PWA lnk files are
         if (Test-Path $pwafolderPath) {
             Get-ChildItem -Path $pwafolderPath -Filter "*.lnk" | ForEach-Object {
                 try { Start-Process $_.FullName }
