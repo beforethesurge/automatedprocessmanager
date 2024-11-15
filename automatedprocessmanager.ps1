@@ -3,7 +3,7 @@ while ($true) {
     if ($currentTime.Hour -eq 19 -and $currentTime.Minute -eq 0) {
         # Ends MSEdge, PWSH and WSL; Clears Temp folder
         Stop-Process -Name "msedge"
-        Get-Process powershell | Where-Object { $_.MainWindowTitle -eq 'NAMEOFPROGRAMWINDOW' } | Stop-Process
+        Get-Process powershell | Where-Object { $_.MainWindowTitle -eq 'NAMEOFPROGRAMWINDOW' } | Stop-Process # Specify Program Window name (hover over icon in Taskbar)
         wsl.exe --shutdown
         Remove-Item -Recurse -Force "C:\Windows\Temp"
 
@@ -11,7 +11,7 @@ while ($true) {
     }
     elseif ($currentTime.Hour -eq 9 -and $currentTime.Minute -eq 0) {
         # Check if shortcuts exist and start them
-        $pwafolderPath = "FOLDERWITHPWAS" # Specify where PWA lnk files are
+        $pwafolderPath = "FOLDERWITHPWAS" # Specify PATH where PWA lnk files are
         if (Test-Path $pwafolderPath) {
             Get-ChildItem -Path $pwafolderPath -Filter "*.lnk" | ForEach-Object {
                 try {
@@ -33,7 +33,7 @@ while ($true) {
         }
 
         # Start PowerShell Terminal
-        $pwshfilepath = "C:\Program Files (x86)\PowerShell\7\pwsh.exe" # Reference first if statement
+        $pwshfilepath = "C:\Program Files (x86)\PowerShell\7\pwsh.exe" # If using default pwsh, specify that PATH instead
         if ($pwshfilepath) { 
             Start-Process -FilePath $pwshfilepath.FullName
         } else {
