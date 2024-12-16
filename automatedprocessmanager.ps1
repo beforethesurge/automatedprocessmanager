@@ -1,17 +1,17 @@
 while ($true) {
     $currentTime = Get-Date
     if ($currentTime.Hour -eq 19 -and $currentTime.Minute -eq 0) {
-        # Ends MSEdge, PWSH and WSL; Clears Temp folder
+        # Ends MSEdge, PWSH and WSL
         Stop-Process -Name "msedge"
-        Get-Process powershell | Where-Object { $_.MainWindowTitle -eq 'NAMEOFPROGRAMWINDOW' } | Stop-Process # Specify Program Window name (hover over icon in Taskbar)
         wsl.exe --shutdown
         Remove-Item -Recurse -Force "C:\Windows\Temp"
 
         Start-Sleep -Seconds 60
     }
+
     elseif ($currentTime.Hour -eq 9 -and $currentTime.Minute -eq 0) {
         # Check if shortcuts exist and start them
-        $pwafolderPath = "FOLDERWITHPWAS" # Specify PATH where PWA lnk files are
+        $pwafolderPath = "P:\DOPE\PowerShell\automatedprocessmanager\shortcuts" # Specify where PWA lnk files are
         if (Test-Path $pwafolderPath) {
             Get-ChildItem -Path $pwafolderPath -Filter "*.lnk" | ForEach-Object {
                 try {
@@ -20,7 +20,7 @@ while ($true) {
                     Write-Host "Error: $_"
                 }
             }
-        } else {
+        } else { 
             Write-Host "Folder not found: $pwafolderPath"
         }
 
@@ -31,16 +31,17 @@ while ($true) {
         } else {
             Write-Host "Kali not found"
         }
-
-        # Start PowerShell Terminal
-        $pwshfilepath = "C:\Program Files (x86)\PowerShell\7\pwsh.exe" # If using default pwsh, specify that PATH instead
-        if ($pwshfilepath) { 
-            Start-Process -FilePath $pwshfilepath.FullName
-        } else {
-            Write-Host "PWSH not found"
-        }
+        
         Start-Sleep -Seconds 60
     }
+
+    # Checks if it's Friday (or whatever day you leave) and shuts down the workstation
+    elseif ($currentTime.DayOfWeek -eq "Friday" -and $currentTime.Hour -eq 18 -and $currentTime.Minute -eq 45) {
+        Stop-Computer -Force
+
+        Start-Sleep -Seconds 60
+    }
+
     # 30 second check for time
     Start-Sleep -Seconds 30
 }
